@@ -1,0 +1,172 @@
+﻿USE [todo_db]
+--GO
+/****** Object:  Table [dbo].[Entity]    Script Date: 5/5/2021 5:21:35 PM ******/
+SET ANSI_NULLS ON
+--GO
+SET QUOTED_IDENTIFIER ON
+--GO
+CREATE TABLE [dbo].[Entity](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[DateCreated] [datetime] NOT NULL,
+	[IdOfCreator] [int] NOT NULL,
+	[LastModifiedAt] [datetime] NOT NULL,
+	[LastModifiedBy] [int] NOT NULL,
+ CONSTRAINT [PK_Entity] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON/*, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF*/) ON [PRIMARY]
+) ON [PRIMARY]
+--GO
+/****** Object:  Table [dbo].[Task]    Script Date: 5/5/2021 5:21:35 PM ******/
+SET ANSI_NULLS ON
+--GO
+SET QUOTED_IDENTIFIER ON
+--GO
+CREATE TABLE [dbo].[Task](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[EntityId] [int] NOT NULL,
+	[ListId] [int] NOT NULL,
+	[Title] [nvarchar](20) NOT NULL,
+	[Description] [nvarchar](max) NOT NULL,
+	[IsComplete] [bit] NOT NULL,
+ CONSTRAINT [PK_Task] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON/*, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF*/) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+--GO
+/****** Object:  Table [dbo].[TaskUser]    Script Date: 5/5/2021 5:21:35 PM ******/
+SET ANSI_NULLS ON
+--GO
+SET QUOTED_IDENTIFIER ON
+--GO
+CREATE TABLE [dbo].[TaskUser](
+	[TaskId] [int] NOT NULL,
+	[UserId] [int] NOT NULL,
+ CONSTRAINT [PK_TaskUser] PRIMARY KEY CLUSTERED 
+(
+	[TaskId] ASC,
+	[UserId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON/*, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF*/) ON [PRIMARY]
+) ON [PRIMARY]
+--GO
+/****** Object:  Table [dbo].[ToDoList]    Script Date: 5/5/2021 5:21:35 PM ******/
+SET ANSI_NULLS ON
+--GO
+SET QUOTED_IDENTIFIER ON
+--GO
+CREATE TABLE [dbo].[ToDoList](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[EntityId] [int] NOT NULL,
+	[Title] [nvarchar](20) NOT NULL,
+ CONSTRAINT [PK_ToDoList] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON/*, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF*/) ON [PRIMARY]
+) ON [PRIMARY]
+--GO
+/****** Object:  Table [dbo].[ToDoListUser]    Script Date: 5/5/2021 5:21:35 PM ******/
+SET ANSI_NULLS ON
+--GO
+SET QUOTED_IDENTIFIER ON
+--GO
+CREATE TABLE [dbo].[ToDoListUser](
+	[ToDoListId] [int] NOT NULL,
+	[UserId] [int] NOT NULL,
+ CONSTRAINT [PK_ToDoListUser] PRIMARY KEY CLUSTERED 
+(
+	[ToDoListId] ASC,
+	[UserId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON/*, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF*/) ON [PRIMARY]
+) ON [PRIMARY]
+--GO
+/****** Object:  Table [dbo].[User]    Script Date: 5/5/2021 5:21:35 PM ******/
+SET ANSI_NULLS ON
+--GO
+SET QUOTED_IDENTIFIER ON
+--GO
+CREATE TABLE [dbo].[User](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[EntityId] [int] NOT NULL,
+	[Username] [nvarchar](20) NOT NULL,
+	[Password] [nvarchar](20) NOT NULL,
+	[FirstName] [nvarchar](20) NOT NULL,
+	[LastName] [nvarchar](20) NOT NULL,
+	[UserRoleId] [int] NOT NULL,
+ CONSTRAINT [PK_User] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON/*, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF*/) ON [PRIMARY]
+) ON [PRIMARY]
+--GO
+/****** Object:  Table [dbo].[UserRole]    Script Date: 5/5/2021 5:21:35 PM ******/
+SET ANSI_NULLS ON
+--GO
+SET QUOTED_IDENTIFIER ON
+--GO
+CREATE TABLE [dbo].[UserRole](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[UserRole] [nvarchar](20) NOT NULL,
+ CONSTRAINT [PK_UserRole] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON/*, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF*/) ON [PRIMARY]
+) ON [PRIMARY]
+--GO
+/****** Object:  Index [Ck_Username_UNIQUE]    Script Date: 5/5/2021 5:21:35 PM ******/
+CREATE UNIQUE NONCLUSTERED INDEX [Ck_Username_UNIQUE] ON [dbo].[User]
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON/*, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF*/) ON [PRIMARY]
+--GO
+ALTER TABLE [dbo].[Task] ADD  CONSTRAINT [DF_Task_IsComplete]  DEFAULT ((0)) FOR [IsComplete]
+--GO
+ALTER TABLE [dbo].[Task]  WITH CHECK ADD  CONSTRAINT [FK_Task_Entity] FOREIGN KEY([EntityId])
+REFERENCES [dbo].[Entity] ([Id])
+--GO
+ALTER TABLE [dbo].[Task] CHECK CONSTRAINT [FK_Task_Entity]
+--GO
+ALTER TABLE [dbo].[Task]  WITH CHECK ADD  CONSTRAINT [FK_Task_ToDoList] FOREIGN KEY([ListId])
+REFERENCES [dbo].[ToDoList] ([Id])
+--GO
+ALTER TABLE [dbo].[Task] CHECK CONSTRAINT [FK_Task_ToDoList]
+--GO
+ALTER TABLE [dbo].[TaskUser]  WITH CHECK ADD  CONSTRAINT [FK_TaskUser_Task] FOREIGN KEY([TaskId])
+REFERENCES [dbo].[Task] ([Id])
+--GO
+ALTER TABLE [dbo].[TaskUser] CHECK CONSTRAINT [FK_TaskUser_Task]
+--GO
+ALTER TABLE [dbo].[TaskUser]  WITH CHECK ADD  CONSTRAINT [FK_TaskUser_User] FOREIGN KEY([UserId])
+REFERENCES [dbo].[User] ([Id])
+--GO
+ALTER TABLE [dbo].[TaskUser] CHECK CONSTRAINT [FK_TaskUser_User]
+--GO
+ALTER TABLE [dbo].[ToDoList]  WITH CHECK ADD  CONSTRAINT [FK_ToDoList_Entity] FOREIGN KEY([EntityId])
+REFERENCES [dbo].[Entity] ([Id])
+--GO
+ALTER TABLE [dbo].[ToDoList] CHECK CONSTRAINT [FK_ToDoList_Entity]
+--GO
+ALTER TABLE [dbo].[ToDoListUser]  WITH CHECK ADD  CONSTRAINT [FK_ToDoListUser_ToDoList] FOREIGN KEY([ToDoListId])
+REFERENCES [dbo].[ToDoList] ([Id])
+--GO
+ALTER TABLE [dbo].[ToDoListUser] CHECK CONSTRAINT [FK_ToDoListUser_ToDoList]
+--GO
+ALTER TABLE [dbo].[ToDoListUser]  WITH CHECK ADD  CONSTRAINT [FK_ToDoListUser_User] FOREIGN KEY([UserId])
+REFERENCES [dbo].[User] ([Id])
+--GO
+ALTER TABLE [dbo].[ToDoListUser] CHECK CONSTRAINT [FK_ToDoListUser_User]
+--GO
+ALTER TABLE [dbo].[User]  WITH CHECK ADD  CONSTRAINT [FK_User_Entity] FOREIGN KEY([EntityId])
+REFERENCES [dbo].[Entity] ([Id])
+--GO
+ALTER TABLE [dbo].[User] CHECK CONSTRAINT [FK_User_Entity]
+--GO
+ALTER TABLE [dbo].[User]  WITH CHECK ADD  CONSTRAINT [FK_User_UserRole] FOREIGN KEY([UserRoleId])
+REFERENCES [dbo].[UserRole] ([Id])
+--GO
+ALTER TABLE [dbo].[User] CHECK CONSTRAINT [FK_User_UserRole]
+--GO
+USE [master]
+--GO
+ALTER DATABASE [todo_db] SET  READ_WRITE 
+--GO
